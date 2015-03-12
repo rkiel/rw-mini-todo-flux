@@ -26,6 +26,12 @@ function handleRemoveItem(index){
   todoActions.removeItem(index);
 }
 
+function _onChange() {
+  this.setState({
+    list: todoStore.getList()
+  })
+}
+
 function render(){
   return (
     <div className="col-sm-6 col-md-offset-3">
@@ -36,12 +42,6 @@ function render(){
       </div>
     </div>
   );
-}
-
-function _onChange() {
-  this.setState({
-    list: todoStore.getList()
-  })
 }
 
 var ListContainer = React.createClass({
