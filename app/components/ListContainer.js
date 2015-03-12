@@ -1,25 +1,29 @@
 var React = require('react');
 var AddItem = require('./AddItem');
 var List = require('./List');
+var todoStore = require('../stores/todoStore');
+var todoActions = require('../actions/todoActions');
 
 function getInitialState(){
   return {
-    list: []
+    list: todoStore.getList()
   }
 }
 
+function componentDidMount() {
+  todoStore.addChangeListener(this._onChange);
+}
+
+function componentWillUnmount() {
+ todoStore.removeChangeListener(this._onChange);
+}
+
 function handleAddItem(newItem){
-  this.setState({
-    list: this.state.list.concat([newItem])
-  });
+  todoActions.addItem(newItem);
 }
 
 function handleRemoveItem(index){
-  var newList = this.state.list;
-  newList.splice(index, 1);
-  this.setState({
-    list: newList
-  });
+  todoActions.removeItem(index);
 }
 
 function render(){
@@ -34,11 +38,20 @@ function render(){
   );
 }
 
+function _onChange() {
+  this.setState({
+    list: todoStore.getList()
+  })
+}
+
 var ListContainer = React.createClass({
-  getInitialState:  getInitialState,
-  handleAddItem:    handleAddItem,
-  handleRemoveItem: handleRemoveItem,
-  render:           render
+  getInitialState:      getInitialState,
+  handleAddItem:        handleAddItem,
+  handleRemoveItem:     handleRemoveItem,
+  componentDidMount:    componentDidMount,
+  componentWillUnmount: componentWillUnmount,
+  _onChange:            _onChange,
+  render:               render
 });
 
 module.exports = ListContainer;
